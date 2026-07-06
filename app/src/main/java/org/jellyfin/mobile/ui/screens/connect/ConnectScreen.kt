@@ -2,11 +2,13 @@ package org.jellyfin.mobile.ui.screens.connect
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -15,9 +17,12 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.jellyfin.mobile.MainViewModel
 import org.jellyfin.mobile.R
 import org.jellyfin.mobile.events.ActivityEvent
@@ -64,6 +69,13 @@ fun LogoHeader() {
             modifier = Modifier
                 .height(72.dp),
             contentDescription = null,
+        )
+        Spacer(modifier = Modifier.width(14.dp))
+        Text(
+            text = "Walhalla.TV",
+            color = Color(0xFFF0C060),
+            fontSize = 28.sp,
+            fontWeight = FontWeight.Bold,
         )
     }
 }

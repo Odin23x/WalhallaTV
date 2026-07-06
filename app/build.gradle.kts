@@ -31,6 +31,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
+        applicationId = "com.walhalla.tv"
         minSdk = 21
         targetSdk = 36
         versionName = project.getVersionName()
