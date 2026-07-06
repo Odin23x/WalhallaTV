@@ -1,6 +1,7 @@
 package org.jellyfin.mobile.ui.screens.connect
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,14 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -38,24 +38,32 @@ fun ConnectScreen(
     showExternalConnectionError: Boolean,
     activityEventHandler: ActivityEventHandler = koinInject(),
 ) {
-    Surface(color = MaterialTheme.colors.background) {
-        Column(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.splash_banner),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+        )
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding()
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 16.dp)
+                .systemBarsPadding(),
         ) {
-            LogoHeader()
-            ServerSelection(
-                showExternalConnectionError = showExternalConnectionError,
-                onConnected = { hostname ->
-                    mainViewModel.switchServer(hostname)
-                },
-            )
-            StyledTextButton(
-                onClick = { activityEventHandler.emit(ActivityEvent.OpenDownloads) },
-                text = stringResource(R.string.view_downloads),
-            )
+            Column(modifier = Modifier.fillMaxSize()) {
+                LogoHeader()
+                ServerSelection(
+                    showExternalConnectionError = showExternalConnectionError,
+                    onConnected = { hostname ->
+                        mainViewModel.switchServer(hostname)
+                    },
+                )
+                StyledTextButton(
+                    onClick = { activityEventHandler.emit(ActivityEvent.OpenDownloads) },
+                    text = stringResource(R.string.view_downloads),
+                )
+            }
         }
     }
 }
@@ -68,8 +76,7 @@ fun LogoHeader() {
     ) {
         Image(
             painter = painterResource(R.drawable.app_logo),
-            modifier = Modifier
-                .height(96.dp),
+            modifier = Modifier.height(96.dp),
             contentDescription = null,
         )
         Spacer(modifier = Modifier.width(16.dp))
