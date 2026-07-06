@@ -33,6 +33,9 @@ import java.util.UUID
 import kotlin.coroutines.resume
 
 fun WebViewFragment.requestNoBatteryOptimizations(rootView: CoordinatorLayout) {
+    // Walhalla: deaktiviert - kein Akku-Optimierungs-Hinweis mehr
+    return
+    @Suppress("UNREACHABLE_CODE")
     if (AndroidVersion.isAtLeastM) {
         val powerManager = requireContext().getSystemService(Activity.POWER_SERVICE) as PowerManager
         if (
