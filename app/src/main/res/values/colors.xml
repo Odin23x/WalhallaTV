@@ -14,6 +14,8 @@
     <color name="playback_controls_background">#cc0d0a06</color>
     <color name="playback_info_background">#ee0d0a06</color>
     <color name="playback_timebar_unplayed">#3a2a12</color>
+    <!-- Splash Banner -->
+    <color name="splash_banner_bg">#14050a</color>
     <!-- Skip Segment Button -->
     <color name="skip_media_segment_background">#1e1710</color>
     <color name="skip_media_segment_text">#f0c060</color>
