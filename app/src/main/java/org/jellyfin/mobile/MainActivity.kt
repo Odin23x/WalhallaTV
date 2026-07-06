@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
-import android.view.KeyEvent
 import android.view.OrientationEventListener
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -91,7 +90,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Check WebView support
         if (!isWebViewSupported()) {
             AlertDialog.Builder(this).apply {
                 setTitle(R.string.dialog_web_view_not_supported)
@@ -111,13 +109,10 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // Bind player service
         bindService(Intent(this, RemotePlayerService::class.java), serviceConnection, Service.BIND_AUTO_CREATE)
 
-        // Subscribe to activity events
         with(activityEventHandler) { subscribe() }
 
-        // Load UI
         lifecycleScope.launch {
             mainViewModel.serverState.collectLatest { state ->
                 lifecycle.withStarted {
@@ -126,10 +121,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Handle back presses
         onBackPressedDispatcher.addCallback(this, onBackPressed = onBackPressedCallback)
 
-        // Setup Chromecast
         chromecast.initializePlugin(this)
     }
 
@@ -138,22 +131,11 @@ class MainActivity : AppCompatActivity() {
         orientationListener.enable()
     }
 
-    // TV: Forward D-Pad events to WebView
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
-        if (currentFragment is WebViewFragment) {
-            return currentFragment.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
-        }
-        return super.onKeyDown(keyCode, event)
-    }
-
     private fun handleServerState(state: ServerState) {
         with(supportFragmentManager) {
             val currentFragment = findFragmentById(R.id.fragment_container)
             when (state) {
-                ServerState.Pending -> {
-                    // TODO add loading indicator
-                }
+                ServerState.Pending -> Unit
                 is ServerState.Unset -> {
                     if (currentFragment !is ConnectFragment) {
                         replaceFragment<ConnectFragment>()
