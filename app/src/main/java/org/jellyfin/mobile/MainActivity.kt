@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.view.KeyEvent
 import android.view.OrientationEventListener
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -63,35 +64,22 @@ class MainActivity : AppCompatActivity() {
 
     private val orientationListener: OrientationEventListener by lazy { SmartOrientationListener(this) }
 
-    /**
-     * Passes back press events onto the currently visible [Fragment] if it implements the [BackPressInterceptor] interface.
-     *
-     * If the current fragment does not implement [BackPressInterceptor] or has decided not to intercept the event
-     * (see result of [BackPressInterceptor.onInterceptBackPressed]), the topmost backstack entry will be popped.
-     *
-     * If there is no topmost backstack entry, the event will be passed onto the dispatcher's fallback handler.
-     */
     private val onBackPressedCallback: OnBackPressedCallback.() -> Unit = callback@{
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (currentFragment is BackPressInterceptor && currentFragment.onInterceptBackPressed()) {
-            // Top fragment handled back press
             return@callback
         }
 
-        // This is the same default action as in Activity.onBackPressed
         if (!supportFragmentManager.isStateSaved && supportFragmentManager.popBackStackImmediate()) {
-            // Removed fragment from back stack
             return@callback
         }
 
-        // Let the system handle the back press
         isEnabled = false
-        // Make sure that we *really* call the fallback handler
         assert(!onBackPressedDispatcher.hasEnabledCallbacks()) {
             "MainActivity should be the lowest onBackPressCallback"
         }
         onBackPressedDispatcher.onBackPressed()
-        isEnabled = true // re-enable callback in case activity isn't finished
+        isEnabled = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,6 +138,15 @@ class MainActivity : AppCompatActivity() {
         orientationListener.enable()
     }
 
+    // TV: Forward D-Pad events to WebView
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (currentFragment is WebViewFragment) {
+            return currentFragment.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event)
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
     private fun handleServerState(state: ServerState) {
         with(supportFragmentManager) {
             val currentFragment = findFragmentById(R.id.fragment_container)
@@ -181,7 +178,6 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         permissionRequestHelper.handleRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
